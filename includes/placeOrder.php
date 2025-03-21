@@ -5,7 +5,10 @@ composer require midtrans/midtrans-php
                               
 Alternatively, if you are not using **Composer**, you can download midtrans-php library 
 (https://github.com/Midtrans/midtrans-php/archive/master.zip), and then require 
-the file manually.   
+the file manually. 
+
+benarkan juga harganya menjadi 649.000  
+
 
 require_once dirname(__FILE__) . '/pathofproject/Midtrans.php'; */
 include "db.php";
@@ -31,16 +34,26 @@ if (!isset($postData['name'], $postData['email'], $postData['phone'])) {
     exit;
 }
 
-// Harga tetap Rp 649.000
-$totalHarga = 649000;
+// Hitung total harga berdasarkan extra bundle
+$totalHarga = 99000;
 $item_details = [
     [
         'id' => 'product-001',
-        'price' => 649000,
+        'price' => 99000,
         'quantity' => 1,
-        'name' => 'Digital Satu Persen | NR HOUSE'
+        'name' => 'Paket Utama'
     ]
 ];
+
+if (!empty($postData['extra_bundle'])) {
+    $totalHarga += 50000;
+    $item_details[] = [
+        'id' => 'extra-bundle',
+        'price' => 50000,
+        'quantity' => 1,
+        'name' => 'Extra 3500+ Slide Infographic & 2000+ Business Templates'
+    ];
+}
 
 // Buat order ID unik
 $order_id = "ORDER-" . time();
@@ -76,5 +89,6 @@ try {
 } catch (Exception $e) {
     echo json_encode(['error' => 'Gagal mendapatkan Snap Token: ' . $e->getMessage()]);
 }
+
 
 ?>
